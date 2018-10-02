@@ -12,9 +12,17 @@ spec:
       containers:
       - name: devops-docker-v3
         image: devopsacrregistry.azurecr.io/rauccapuclla/devops-docker:3.0.0
+        imagePullPolicy: Always
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
         ports:
-        - containerPort: 8080
-          name: http
+        - name: http
+          containerPort: 8080
+      imagePullSecrets:
+        - name: azure-auth
 ---
 apiVersion: v1
 kind: Service
@@ -25,3 +33,15 @@ spec:
   - port: 8080
   selector:
     app: devops-docker-v3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-docker-api
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+  selector:
+    app: devops-docker-v3
+
