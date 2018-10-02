@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: devops-docker-v3
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: devops-docker-v3
+    spec:
+      containers:
+      - name: devops-docker-v3
+        image: devopsacrregistry.azurecr.io/rauccapuclla/devops-docker:3.0.0
+        ports:
+        - containerPort: 8080
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-docker-v3
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: devops-docker-v3
